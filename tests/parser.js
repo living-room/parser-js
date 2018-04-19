@@ -22,4 +22,33 @@ test('parsing', t => {
   ], parse('oh hi "thing is quoted here" _ 1.0 $var'));
 
 });
+
+test('issue#2', t => {
+  t.deepEqual([ { value: 0.5 } ], parse('0.5'));
+  t.deepEqual([ { value: 0.5 } ], parse('.5'));
+  t.deepEqual([ { value: 10 } ], parse('10'));
+  t.deepEqual([
+    { word: 'gorog' },
+    { word: ' ' },
+    { word: 'is' },
+    { word: ' ' },
+    { word: 'at' },
+    { word: ' ' },
+    { value: 0.1 },
+    { word: ',' },
+    { word: ' ' },
+    { value: 5 }
+  ], parse('gorog is at 0.1, 5'));
+  t.deepEqual([
+    { word: 'gorog' },
+    { word: ' ' },
+    { word: 'is' },
+    { word: ' ' },
+    { word: 'at' },
+    { word: ' ' },
+    { value: 0.1 },
+    { word: ',' },
+    { word: ' ' },
+    { value: 5 }
+  ], parse('gorog is at .1, 5'));
 })

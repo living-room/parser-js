@@ -45,6 +45,7 @@ const grammar = ohm.grammar(`
 
     float
       = integer ("." digit+)?
+      | "." digit (digit+)?
 
     integer
       = ("+" | "-")? digit+
