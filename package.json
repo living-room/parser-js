@@ -1,0 +1,24 @@
+{
+	"name": "living-room-parser",
+	"author": "Alex Warth <alexwarth@gmail.com> (http://alexwarth.com)",
+	"version": "0.1.0",
+	"license": "MIT",
+	"description": "A datalog-style grammar and parser for the living room language",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/living-room/parser-js.git"
+	},
+	"dependencies": {
+		"ohm-js": "^0.14.0"
+	},
+	"keywords": [
+		"datalog",
+		"natural",
+		"language",
+		"dynamicland",
+		"harc"
+	],
+	"bugs": {
+		"url": "https://github.com/living-room/parser-js/issues"
+	}
+}
