@@ -1,5 +1,5 @@
 {
-    "name": "living-room-parser",
+    "name": "@living-room/parser-js",
     "author": "Alex Warth <alexwarth@gmail.com> (http://alexwarth.com)",
     "version": "0.1.0",
     "license": "MIT",
