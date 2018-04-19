@@ -1,7 +1,7 @@
 {
     "name": "@living-room/parser-js",
     "author": "Alex Warth <alexwarth@gmail.com> (http://alexwarth.com)",
-    "version": "0.1.0",
+    "version": "0.4.0",
     "license": "MIT",
     "description": "A datalog-style grammar and parser for the living room language",
     "main": "index.js",
