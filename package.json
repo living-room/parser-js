@@ -4,6 +4,7 @@
 	"version": "0.1.0",
 	"license": "MIT",
 	"description": "A datalog-style grammar and parser for the living room language",
+	"main": "index.js",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/living-room/parser-js.git"
@@ -20,5 +21,11 @@
 	],
 	"bugs": {
 		"url": "https://github.com/living-room/parser-js/issues"
-	}
+	},
+	"devDependencies": {
+		"ava": "^0.25.0"
+	},
+    "scripts": {
+        "test": "ava tests/*"
+    }
 }
