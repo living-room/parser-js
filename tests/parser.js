@@ -1,6 +1,8 @@
 import test from 'ava';
 import parse from '../index';
 
+const SPACE = { word: ' ' };
+
 test('parsing', t => {
 
   t.deepEqual([], parse(''), 'empty input');
@@ -9,15 +11,15 @@ test('parsing', t => {
 
   t.deepEqual([
     { word: 'oh' },
-    { word: ' ' },
+    SPACE,
     { word: 'hi' },
-    { word: ' ' },
+    SPACE,
     { value: 'thing is quoted here' },
-    { word: ' ' },
+    SPACE,
     { hole: true },
-    { word: ' ' },
+    SPACE,
     { value: 1.0 },
-    { word: ' ' },
+    SPACE,
     { variable: 'var' }
   ], parse('oh hi "thing is quoted here" _ 1.0 $var'));
 
@@ -29,26 +31,26 @@ test('issue#2', t => {
   t.deepEqual([ { value: 10 } ], parse('10'));
   t.deepEqual([
     { word: 'gorog' },
-    { word: ' ' },
+    SPACE,
     { word: 'is' },
-    { word: ' ' },
+    SPACE,
     { word: 'at' },
-    { word: ' ' },
+    SPACE,
     { value: 0.1 },
     { word: ',' },
-    { word: ' ' },
+    SPACE,
     { value: 5 }
   ], parse('gorog is at 0.1, 5'));
   t.deepEqual([
     { word: 'gorog' },
-    { word: ' ' },
+    SPACE,
     { word: 'is' },
-    { word: ' ' },
+    SPACE,
     { word: 'at' },
-    { word: ' ' },
+    SPACE,
     { value: 0.1 },
     { word: ',' },
-    { word: ' ' },
+    SPACE,
     { value: 5 }
   ], parse('gorog is at .1, 5'));
 })
