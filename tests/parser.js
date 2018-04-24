@@ -42,8 +42,17 @@ test('words', t => {
   t.deepEqual(ts().w('hi').v(0.1).done(), parse('hi.1'));
   t.deepEqual(ts().w('w').v(1).done(), parse('w1'));
   t.deepEqual(ts().w('w').v('').done(), parse('w""'));
+  t.deepEqual(ts().id('').done(), parse('#'));
+});
+
+test('FIXME quotes', t => {
+  // these are weird/ambiguous grammar rules that
+  // are currently being forgiven, but should error out
+  // because they dont make sense and make parsing the grammar
+  // more difficult in other languages
   t.deepEqual(ts().w('w"').done(), parse('w"'));
   t.deepEqual(ts().w('"').done(), parse('"'));
+  t.deepEqual(ts().w('w"a').done(), parse('w"a'));
 });
 
 test('issue#2', t => {
