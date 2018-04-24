@@ -41,6 +41,9 @@ test('words', t => {
   t.deepEqual(ts().w_('hi.').w('you').done(), parse('hi. you'));
   t.deepEqual(ts().w('hi').v(0.1).done(), parse('hi.1'));
   t.deepEqual(ts().w('w').v(1).done(), parse('w1'));
+  t.deepEqual(ts().w('w').v('').done(), parse('w""'));
+  t.deepEqual(ts().w('w"').done(), parse('w"'));
+  t.deepEqual(ts().w('"').done(), parse('"'));
 });
 
 test('issue#2', t => {
