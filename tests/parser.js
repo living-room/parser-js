@@ -33,6 +33,13 @@ test('words', t => {
   // for documentation purposes
   t.deepEqual(ts().w(',,,,').done(), parse(',,,,'));
   t.deepEqual(ts().w('a,y').done(), parse('a,y'));
+  t.deepEqual(ts().w('a').h().done(), parse('a_'));
+  t.deepEqual(
+    ts().w('(').variable('a').w_(',').variable('b').w(')').done(),
+    parse('($a, $b)')
+  );
+  t.deepEqual(ts().w_('hi.').w('you').done(), parse('hi. you'));
+  t.deepEqual(ts().w('hi').v(0.1).done(), parse('hi.1'));
 });
 
 test('issue#2', t => {
