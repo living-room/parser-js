@@ -40,6 +40,7 @@ test('words', t => {
   );
   t.deepEqual(ts().w_('hi.').w('you').done(), parse('hi. you'));
   t.deepEqual(ts().w('hi').v(0.1).done(), parse('hi.1'));
+  t.deepEqual(ts().w('w').v(1).done(), parse('w1'));
 });
 
 test('issue#2', t => {
