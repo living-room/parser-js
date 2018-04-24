@@ -1,56 +1,137 @@
 import test from 'ava';
 import parse from '../index';
 
-const SPACE = { word: ' ' };
-
 test('parsing', t => {
 
   t.deepEqual([], parse(''), 'empty input');
-  t.deepEqual([{ word: 'hi' }], parse('hi'), 'simple word');
-  t.deepEqual([{ variable: 'foo' }], parse('$foo'), 'simple var');
+  t.deepEqual([ word('hi')], parse('hi'), 'simple word');
+  t.deepEqual([ variable('foo') ], parse('$foo'), 'simple var');
 
-  t.deepEqual([
-    { word: 'oh' },
-    SPACE,
-    { word: 'hi' },
-    SPACE,
-    { value: 'thing is quoted here' },
-    SPACE,
-    { hole: true },
-    SPACE,
-    { value: 1.0 },
-    SPACE,
-    { variable: 'var' }
-  ], parse('oh hi "thing is quoted here" _ 1.0 $var'));
+  t.deepEqual(
+    ts()
+    .w_('oh')
+    .w_('hi')
+    .v_('thing is quoted here')
+    .h_()
+    .v_(1.0)
+    .variable('var').done(),
+    parse('oh hi "thing is quoted here" _ 1.0 $var')
+  );
 
 });
 
+test('whitespace', t => {
+  t.deepEqual(
+    ts().w_('hi').w('you').done(),
+    parse('hi    you'),
+    'white space gets collapsed'
+  );
+});
+
+test('words', t => {
+  // this exists to document *how* things are being parsed
+  // for documentation purposes
+  t.deepEqual(ts().w(',,,,').done(), parse(',,,,'));
+  t.deepEqual(ts().w('a,y').done(), parse('a,y'));
+});
+
 test('issue#2', t => {
-  t.deepEqual([ { value: 0.5 } ], parse('0.5'));
-  t.deepEqual([ { value: 0.5 } ], parse('.5'));
-  t.deepEqual([ { value: 10 } ], parse('10'));
-  t.deepEqual([
-    { word: 'gorog' },
-    SPACE,
-    { word: 'is' },
-    SPACE,
-    { word: 'at' },
-    SPACE,
-    { value: 0.1 },
-    { word: ',' },
-    SPACE,
-    { value: 5 }
-  ], parse('gorog is at 0.1, 5'));
-  t.deepEqual([
-    { word: 'gorog' },
-    SPACE,
-    { word: 'is' },
-    SPACE,
-    { word: 'at' },
-    SPACE,
-    { value: 0.1 },
-    { word: ',' },
-    SPACE,
-    { value: 5 }
-  ], parse('gorog is at .1, 5'));
-})
+  const half = [ value(0.5) ];
+  t.deepEqual(half, parse('0.5'));
+  t.deepEqual(half, parse('.5'));
+  t.deepEqual([ value(10) ], parse('10'));
+
+  const gorog = ts()
+    .w_('gorog')
+    .w_('is')
+    .w_('at')
+    .v(0.1)
+    .w_(',')
+    .v(5)
+    .done();
+
+  t.deepEqual(gorog, parse('gorog is at 0.1, 5'));
+  t.deepEqual(gorog, parse('gorog is at .1, 5'));
+});
+
+///////////////////////////////////
+// ... Helpers defined below ... //
+///////////////////////////////////
+
+const token = (k, v) => {
+  var o = { };
+  o[k] = v;
+  return o;
+};
+
+const word = (v) => token('word', v);
+const value = (v) => token('value', v);
+const variable = (v) => token('variable', v);
+const id = (v) => token('id', v);
+
+const hole = () => token('hole', true);
+const space = () => word(' ');
+
+class T {
+  constructor() {
+    this.tokens = [];
+  }
+
+  w(v) {
+    this.tokens.push(word(v));
+    return this;
+  }
+
+  w_(v) {
+    return this.w(v)._();
+  }
+
+  v(v) {
+    this.tokens.push(value(v));
+    return this;
+  }
+
+  v_(v) {
+    return this.v(v)._();
+  }
+
+  variable(v) {
+    this.tokens.push(variable(v));
+    return this;
+  }
+
+  variable_(v) {
+    return this.variable(v)._();
+  }
+
+  h() {
+    this.tokens.push(hole());
+    return this;
+  }
+
+  h_() {
+    return this.h()._();
+  }
+
+  _() {
+    this.tokens.push(space());
+    return this;
+  }
+
+  id(v) {
+    this.tokens.push(id(v));
+    return this;
+  }
+
+  id_(v) {
+    return this.id(v)._();
+  }
+
+  done() {
+    return this.tokens;
+  }
+}
+
+function ts() {
+  return new T();
+}
