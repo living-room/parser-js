@@ -1,6 +1,15 @@
 import test from 'ava';
 import parse from '../index';
 
+test('token helpers', t => {
+  t.deepEqual({ word: 'hi' }, word('hi'));
+  t.deepEqual({ value: 1 }, value(1));
+  t.deepEqual({ variable: 'hi' }, variable('hi'));
+  t.deepEqual({ hole: true }, hole());
+  t.deepEqual({ word: ' ' }, space());
+  t.deepEqual([ word('hi'), space() ], ts().w_('hi').done());
+});
+
 test('parsing', t => {
 
   t.deepEqual([], parse(''), 'empty input');
@@ -20,17 +29,14 @@ test('parsing', t => {
 
 });
 
-test('whitespace', t => {
+test('words', t => {
+  // this exists to document *how* things are being parsed
+  // for documentation purposes...
   t.deepEqual(
     ts().w_('hi').w('you').done(),
     parse('hi    you'),
     'white space gets collapsed'
   );
-});
-
-test('words', t => {
-  // this exists to document *how* things are being parsed
-  // for documentation purposes
   t.deepEqual(ts().w(',,,,').done(), parse(',,,,'));
   t.deepEqual(ts().w('a,y').done(), parse('a,y'));
   t.deepEqual(ts().w('a').h().done(), parse('a_'));
@@ -43,6 +49,7 @@ test('words', t => {
   t.deepEqual(ts().w('w').v(1).done(), parse('w1'));
   t.deepEqual(ts().w('w').v('').done(), parse('w""'));
   t.deepEqual(ts().id('').done(), parse('#'));
+  t.deepEqual([ { wildcard: true } ], parse('$'));
 });
 
 test('FIXME quotes', t => {
@@ -55,10 +62,10 @@ test('FIXME quotes', t => {
   t.deepEqual(ts().w('w"a').done(), parse('w"a'));
 });
 
-test('issue#2', t => {
-  const half = [ value(0.5) ];
-  t.deepEqual(half, parse('0.5'));
-  t.deepEqual(half, parse('.5'));
+test('floats can have an optional leading zero (issue #2)', t => {
+  const half = value(0.5);
+  t.deepEqual([ half ], parse('0.5'));
+  t.deepEqual([ half ], parse('.5'));
   t.deepEqual([ value(10) ], parse('10'));
 
   const gorog = ts()
@@ -73,6 +80,8 @@ test('issue#2', t => {
   t.deepEqual(gorog, parse('gorog is at 0.1, 5'));
   t.deepEqual(gorog, parse('gorog is at .1, 5'));
 });
+
+
 
 ///////////////////////////////////
 // ... Helpers defined below ... //
@@ -92,7 +101,7 @@ const id = (v) => token('id', v);
 const hole = () => token('hole', true);
 const space = () => word(' ');
 
-class T {
+class ChainableTokens {
   constructor() {
     this.tokens = [];
   }
@@ -153,5 +162,5 @@ class T {
 }
 
 function ts() {
-  return new T();
+  return new ChainableTokens();
 }
