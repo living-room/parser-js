@@ -7,22 +7,24 @@ const grammar = ohm.grammar(`
       = term*
 
     term
-      = id
-      | word
-      | value
+      = value
+      | hole
+      | id
       | variable
       | wildcard
-      | hole
+      | word
+      | ws
+
+    value
+      = "true"   -- true
+      | "false"  -- false
+      | "null"   -- null
+      | number
+      | integer
+      | string
 
     id
       = "#" alnum*
-
-    value
-      = keyword<"true">   -- true
-      | keyword<"false">  -- false
-      | keyword<"null">   -- null
-      | number
-      | string
 
     variable
       = "$" alnum+
@@ -33,9 +35,12 @@ const grammar = ohm.grammar(`
     hole
       = "_"
 
+    ws
+      = space+
+
     word
-      = (~special any)+  -- nonspace
-      | space+           -- space
+      = word_pattern+ ~digit
+      | word_char+
 
     keyword<k>
       = k ~alnum
@@ -53,9 +58,8 @@ const grammar = ohm.grammar(`
     string
       = "\\"" (~"\\"" ~"\\n" any)* "\\""
 
-    special
-      = id | value | variable | wildcard | hole | space
-
+    word_char = ~("#" | "\\"" | "$" | "_" | space | digit | ".") any
+    word_pattern = word_char+ "."+
   }
 `)
 
