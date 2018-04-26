@@ -52,14 +52,10 @@ test('words', t => {
   t.deepEqual([ { wildcard: true } ], parse('$'));
 });
 
-test('FIXME quotes', t => {
-  // these are weird/ambiguous grammar rules that
-  // are currently being forgiven, but should error out
-  // because they dont make sense and make parsing the grammar
-  // more difficult in other languages
-  t.deepEqual(ts().w('w"').done(), parse('w"'));
-  t.deepEqual(ts().w('"').done(), parse('"'));
-  t.deepEqual(ts().w('w"a').done(), parse('w"a'));
+test('unbalanced quotes are malformed expressions (issue #6)', t => {
+  t.throws(() => { ts().w('w"').done(), parse('w"') }, Error);
+  t.throws(() => { ts().w('"').done(), parse('"') }, Error);
+  t.throws(() => { ts().w('w"a').done(), parse('w"a') }, Error);
 });
 
 test('floats can have an optional leading zero (issue #2)', t => {
@@ -80,8 +76,6 @@ test('floats can have an optional leading zero (issue #2)', t => {
   t.deepEqual(gorog, parse('gorog is at 0.1, 5'));
   t.deepEqual(gorog, parse('gorog is at .1, 5'));
 });
-
-
 
 ///////////////////////////////////
 // ... Helpers defined below ... //

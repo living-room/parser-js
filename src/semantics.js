@@ -25,11 +25,17 @@ const semantics = grammar.createSemantics().addOperation('parse', {
   hole (_) {
     return { hole: true }
   },
-  word_nonspace (_) {
+  word (_) {
     return { word: this.sourceString }
   },
-  word_space (_) {
+  whitespace (_) {
     return { word: ' ' }
+  },
+  integer (_1, _2) {
+    return { value: parseInt(this.sourceString) }
+  },
+  float (_1, _2, _3) {
+    return { value: parseFloat(this.sourceString) }
   },
   number (_1, _2, _3) {
     return { value: parseFloat(this.sourceString) }
