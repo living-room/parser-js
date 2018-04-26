@@ -42,9 +42,6 @@ const grammar = ohm.grammar(`
       = word_pattern+ ~digit
       | word_char+
 
-    keyword<k>
-      = k ~alnum
-
     number
       = float ("e" float)?
 
