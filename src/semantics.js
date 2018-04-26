@@ -25,10 +25,10 @@ const semantics = grammar.createSemantics().addOperation('parse', {
   hole (_) {
     return { hole: true }
   },
-  word(_) {
+  word (_) {
     return { word: this.sourceString }
   },
-  ws(_) {
+  whitespace (_) {
     return { word: ' ' }
   },
   integer (_1, _2) {
